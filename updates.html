@@ -1,0 +1,249 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/base.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>zfs.rent</title>
+</head>
+
+<header>
+  <h1><a href="/">zfs.rent</a></h1>
+
+    <a href="/">home</a>
+  | <a href="/beta.html">beta</a>
+  | <a href="/pricing.html">pricing</a>
+  | <a href="/updates.html">updates</a>
+  | <a href="/manage.html">manage your account</a>
+  | <a href="/status.html">status</a>
+  <hr>
+</header>
+
+<body>
+<style>
+li.question {
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+li.question li {
+    font-weight: normal;
+}
+.hardware-photos img {
+  max-height: 250px;
+  margin: 10px;
+}
+</style>
+
+<h2>updates</h2>
+<p>
+A changelog-ish journal of what's going on.
+</p>
+<hr>
+
+<h3>Progress Update - Dec. 25th, 2020 [<a id=u3 href="#u3">permalink</a>]</h3>
+<section style="background: lightyellow">
+<u>Author: Ryan Jacobs</u>
+
+<h4>Happy Holidays!</h4>
+<p>
+First of all, I want to wish everyone a relaxing winter break.
+</p>
+<p>
+I am taking a couple weeks off my dayjob to help enroll new users.
+Response time via email should be less than 24 hours. Feel free to
+email directly or make post on our
+<a href="https://github.com/radious-subsystems/zfs.rent/discussions">
+GitHub discussion board</a>.
+</p>
+
+<h4>Open-Source</h4>
+<p>
+In the spirit of transparency and longevity, we are open-sourcing
+our software, database schemas, and runbooks. Safely migrating everything
+to the public repo will probably take a week or so.
+</p>
+
+<h4>Commitment to Communication</h4>
+<p>
+It has been about two weeks since our last public update. In the mean time,
+we have on-boarded several users and gathered feedback. From here on out,
+there will be a weekly update posted on Fridays. In addition, minor status
+updates may be posted on <a href="https://twitter.com/radious__">our Twitter</a>.
+</p>
+
+<h4>API</h4>
+<p>
+As we mentioned in our
+<a href="https://radious.co/philosophy.txt">philosophy.txt</a>
+document, we strive for an API-first system. Everything exposed on our
+dashboards/graphs can be called directly over JSON over HTTP APIs.
+</p>
+<p>
+The current API is being fleshed out. But please check out these two endpoints
+for hypervisor #1:
+<ul>
+  <li><a href="https://api.zfs.rent/v0/status/drives/hvm1.json">api.zfs.rent/v0/status/drives/hvm1.json</a></li>
+  <li><a href="https://api.zfs.rent/v0/status/bandwidth/hvm1.json">api.zfs.rent/v0/status/bandwidth/hvm1.json</a></li>
+</ul>
+</p>
+<p>
+Similar endpoints exist for user data, (e.g. your own drive temperature
+stats and bandwidth usage.)
+</p>
+
+<h4>Accounts</h4>
+<p>
+In order to simplify our on-boarding process, we have decided to use email-based
+auth codes for the time being. If you do not have account, simply enter your
+email in the login dashboard and one will be created for you. A corresponding
+API key will be created for you automatically.
+</p>
+<hr>
+
+<h4>Hardware Photos</h4>
+<p>(Hover for captions.)</p>
+<p class="hardware-photos">
+  <img src="img/u3/datacenter.jpg"     title="west wing of datacenter.">
+  <img src="img/u3/drive_fanout.jpg"   title="4 drives, labeled and ready for insertion.">
+  <img src="img/u3/drive_cage_top.jpg" title="top view of 5x drive cage.">
+  <img src="img/u3/chassis_top.jpg"    title="top view 30x drive chassis. (6 sets of 5 drives)">
+</p>
+
+<h4>Roadblocks: Software, Hardware, and Logistics</h4>
+<p>
+Here are a few roadblocks (and solutions!) we have encountered over the past
+two weeks.
+</p>
+<hr>
+
+<h4>Hardware Issue #1 - Temperature</h4>
+<p>
+Shortly after launch, we assembled a 2x 8TB system in a small 1U chassis
+to benchmark disk speeds and log temperatures within the datacenter.
+Unfortunately, cooling was an issue. We did not install any fans directed at
+the drives. (Note: "m2_drive" refers to "machine-2", not the M.2 device
+standard.) The cyclical spikes you are seeing correspond to the datacenter's
+ambient temperature day/night cycle. Next trip, I plan to install some ambient
+temperature sensors in the rack.
+</p>
+<div align=center>
+  <img src="https://notryan.com/img?filename=m2_drive.png"
+       title="Plot of 1U-Chassis Drive Temperatures (X=Time, Y=Temperature_Degrees_C)">
+</div>
+<p>
+These issues have been mitigated with our 4U chassis. In each chassis,
+we install five pressure-optimized fans in a push-pull configuration. There
+are three intake fans that push air directly into the drive cages. Each drive
+is separated by roughly 0.25 inches and the air flows through them, like
+fins. At the rear of the chassis, two exhaust fans accelerate the airflow.
+</p>
+<div align=center>
+  <img src="https://notryan.com/img?filename=h1_drives.png"
+       title="Plot of 4U-Chassis Drive Temperatures (X=Time, Y=Temperature_Degrees_C)">
+</div>
+<p>
+With the new fans and larger chassis, the drive temperatures are in a
+reasonable range!
+</p>
+<p>
+These plots are regenerated every 5 minutes. The backend software will be
+open-sourced generically at:
+<a href="https://github.com/radious-subsystems/metrics">radious-subsystems/metrics</a>.
+(Note: the repo hasn't been made public yet. But it will be soon!)
+</p>
+<hr>
+
+<h4>Logistics Issue #1 - AMD CPU Stock</h4>
+<p>
+It was bad timing to launch a hardware-centric business in the midst of
+an ongoing silicon shortage.
+<ul>
+  <li><a href="https://www.igorslab.de/en/if-important-components-will-become-shortage-cpus-gpus-console-chips-and-other-components-as-complex-handle-object/">igorslab.de</a></li>
+  <li><a href="https://www.reuters.com/article/idUSKBN28R0ZL">reuters.com</a></li>
+</ul>
+We pivoted to Intel-based systems instead of AMD in order to meet demand. This
+has increased our costs slightly, but end-user performance should be roughly
+the same.
+</p>
+<hr>
+
+<h4>Software Issue #1 - CentOS 8.2 Redacts 2029 LTS (Long-Term Support)</h4>
+<p>
+In other news, IBM/RedHat have recently dropped their 2029 LTS timeline for
+CentOS 8.... which is a real bummer. Additionally, their upgrade to CentOS 8.3
+broke new OpenZFS 0.8.5 installs. In the interim, we installed ZFS 2.0.0 on
+several systems and has been working smoothly. The ZFS team has a fairly
+solid track record of cautious updates and I trust 2.0.0 not to break anything.
+</p>
+<p>
+Luckily, the OpenZFS devs are quick. Within two weeks, ZFS 0.8.6 now
+installs on CentOS 8.3 without any additional effort.
+</p>
+<p>
+I anticipate that by the time Jan. 2022 rolls around, Rocky Linux will provide
+a viable transition path from CentOS 8.
+</p>
+
+<h4>Software Issue #2 - DHCP firewalling</h4>
+<p>This is a royal pain-in-the-ass because of Linux raw sockets.
+(<a href="https://superuser.com/a/1457487">https://superuser.com/a/1457487</a>)
+</p>
+<p>
+DHCP requests and responses skip over iptables and ebtables rules. I plan
+on doing a write-up of our solution in the docs later on. We use DHCP to
+map static IPs to each VM's mac address. It was important to guarantee that
+outside DHCP queries would not be able to leak in/out of our systems.
+</p>
+
+</section>
+
+<h3>Dec. 2nd, 2020 [<a id=m002 href="#m002">permalink</a>]</h3>
+<section style="background: lightyellow">
+  <a href="/mail/002.txt">/mail/002.txt</a>
+</section>
+
+<h3>Nov. 28th, 2020 [<a id=m001 href="#m001">permalink</a>]</h3>
+<section style="background: lightyellow">
+  <a href="/mail/001.txt">/mail/001.txt</a>
+</section>
+
+<h3>Schema Finalized - Nov. 20th, 2020 [<a id=u2 href="#u2">permalink</a>]</h3>
+<section style="background: lightyellow">
+<u>Author: Ryan Jacobs</u>
+<p>
+Eh... I thought this ER diagram generator made the DB schema look slick, so
+I'd might as well post it. All of our base entities are tracked in the database.
+It records their power usage, bandwidth consumption, temperature, etc.
+<img src="../img/schema-v1.png" alt="Diagram of the SQL schema in production.">
+</p>
+<p>
+I'm going to port over a project that I've been working on to plot lightweight
+.png graphs of the systems.
+(<a href="//notryan.com/vast">example 1</a>, <a href="//notryan.com/status">example 2</a>)
+Look ma! No JS!
+</p>
+<p>
+(Axes labels will be added to the zfs.rent graphs of course.)
+</p>
+</section>
+</body>
+
+<footer>
+    <hr>
+    <span style="float: right">zfs.rent</span>
+    <span>&copy;
+      <a target="_top" href="https://radious.co/philosophy.txt">
+        Radious Subsystems
+      </a>
+    </span>
+</footer>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-183685667-1">
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-183685667-1');
+</script>

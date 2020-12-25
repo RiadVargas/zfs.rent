@@ -1,0 +1,107 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/base.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>zfs.rent</title>
+</head>
+
+<header>
+  <h1><a href="/">zfs.rent</a></h1>
+
+    <a href="/">home</a>
+  | <a href="/beta.html">beta</a>
+  | <a href="/pricing.html">pricing</a>
+  | <a href="/updates.html">updates</a>
+  | <a href="/manage.html">manage your account</a>
+  | <a href="/status.html">status</a>
+  <hr>
+</header>
+
+<body>
+<h2>manage your account</h2>
+<hr>
+
+<style>
+label {
+  display: inline-block;
+  margin-right: 0;
+}
+</style>
+
+<pre id="debug">
+</pre>
+
+<form method="POST" action="https://api.zfs.rent/login">
+  <label>
+    email: <input required type="email" name="email">
+  </label>
+
+  <label>
+    <input type="submit" value="login">
+  </label>
+</form>
+
+<button id="signout" hidden>sign out</button>
+
+<script>
+  function log(msg) {
+      console.log(msg);
+      const el = document.getElementById("debug");
+      el.innerHTML += msg + "\n";
+  }
+
+  const sign_out = function() {
+      window.localStorage.removeItem("session_id");
+      document.getElementsByTagName("button")[0].hidden = true;
+      window.location.reload();
+  }
+
+  async function form_flip() {
+    const session_id = window.localStorage.getItem("session_id");
+    console.log({session_id});
+
+    // no session id --> display login
+    if (!session_id) return;
+
+    const base    = "https://api.zfs.rent/session_details";
+    const res     = await fetch(`${base}?session_id=${session_id}`);
+    const details = await res.json();
+    console.table(details);
+
+    // session not valid --> display login
+    if (!details || details.is_web_session_expired) return;
+
+    // display table
+    document.getElementsByTagName("form")[0].remove();
+    for (let [key, value] of Object.entries(details)) {
+      log(`<b>${key}</b>: ${value}`);
+    }
+    document.getElementsByTagName("button")[0].hidden = false;
+    document.getElementsByTagName("button")[0].onclick = sign_out;
+  }
+
+  form_flip();
+</script>
+</body>
+
+<footer>
+    <hr>
+    <span style="float: right">zfs.rent</span>
+    <span>&copy;
+      <a target="_top" href="https://radious.co/philosophy.txt">
+        Radious Subsystems
+      </a>
+    </span>
+</footer>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-183685667-1">
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-183685667-1');
+</script>

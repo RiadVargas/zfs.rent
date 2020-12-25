@@ -1,0 +1,170 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/base.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>zfs.rent</title>
+</head>
+
+<header>
+  <h1><a href="/">zfs.rent</a></h1>
+
+    <a href="/">home</a>
+  | <a href="/beta.html">beta</a>
+  | <a href="/pricing.html">pricing</a>
+  | <a href="/updates.html">updates</a>
+  | <a href="/manage.html">manage your account</a>
+  | <a href="/status.html">status</a>
+  <hr>
+</header>
+
+<body>
+<h2>beta:</h2>
+<p>
+<b>We have queued up 200 users and have decided to close new requests for the
+   time being. Please check back soon!</b>
+</p>
+
+<p>
+Email <a href="mailto:zfs@radious.co">zfs@radious.co</a> with any questions.
+</p>
+<hr>
+
+<h2>purpose:</h2>
+<p>
+Simple cloud service to permanently store ZFS snapshots, ala:
+<b><pre>
+$ zfs send -v -R -I pool/snapshot_034 pool/snapshot_042 |\
+    ssh marvin@marvin.zfs.rent zfs recv -v -Fu pool/snapshots
+</pre></b>
+</p>
+<hr>
+
+<h2>how:</h2>
+<p>
+We rent out KVM virtual machines with dedicated hard drives.
+There is no sharing/over-committing.
+</p>
+<p>
+When you rent a drive, you will
+receive an email with the following:
+<ul>
+  <li>root password</li>
+  <li>dedicated IPv4 address -- mapped to a subdomain of your choosing
+    <ul>
+        <li>e.g. marvin.zfs.rent</li>
+    </ul>
+  </li>
+  <li>pre-formatted + mounted ZFS Storage Pool (zpool)
+    <ul>
+        <li>Although! Feel free to wipe the device and configure it from scratch.</li>
+    </ul>
+  </li>
+</ul>
+</p>
+<p>
+The drives are attached as pass-through as SATA devices.
+<b>*They are raw.*</b>
+There is no drive virtualization layer.
+</p>
+<p>
+Users have a choice of:
+<ul>
+    <li><b>OpenZFS + CentOS 8.2</b> &nbsp;
+      (maintence support until <strike>2029</strike>
+      <a href="https://blog.centos.org/2020/12/future-is-centos-stream/">2021</a>)
+    </li>
+    <li><b>OpenZFS + Ubuntu 20.04</b> (maintence support until 2025)</li>
+    <li>
+        <b>No Pre-installed OS</b>
+        <ul>
+            <li>i.e. attach a Linux .iso and install the OS via
+                an HTTPS-tunneled VNC client.
+            </li>
+        </ul>
+    </li>
+</ul>
+</p>
+<hr>
+
+<h2>encryption:</h2>
+<p>
+ZFS supports native encryption and snapshotting. Once you have access to your
+instance, you can configure your keys. Basically, once per boot, you need
+to run <code>zfs load-key -a</code> and punch in your passphrase. Given our
+datacenter's history of 99.95% uptime, we believe that re-entering your keys
+will be a rarity. But if system power-loss occurs, user data will be
+encrypted-at-rest. At any time, users can issue <code>sudo reboot</code>
+to ensure their encrypted datasets are safe from physical seisure.
+</p>
+
+<h2>datacenter:</h2>
+<p>
+<a href="//datanoc.com">DataNOC</a> in Rancho Cordova, CA.
+</p>
+
+<h2>pricing:</h2>
+See <a href="/pricing.html">zfs.rent/pricing</a>
+
+<h2>rent-to-own:</h2>
+<p>
+For rent-to-own drives, we purchase a new Western Digital or Seagate drive
+-- and then install it into our datacenter. After your equal payments have
+been completed,
+<b>*you own the drive*</b> -- at which point you can continue to colocate
+your drive(s) by paying the standard service cost.
+</p>
+<p>
+Check out our <a href="/pricing.html">pricing</a> for more details. But briefly:
+<ul>
+    <li>rental: ~$20/month for a 8 TB dedicated drive.</li>
+    <li>rent-to-own: ~$20/month for a 8 TB dedicated drive that you own
+        after 24-months. After your rental-term, colocation is ~$10/month
+        thereafter.</li>
+    <li>low-risk rental: ~$10/month for a 1 TB KVM drive</li>
+</ul>
+</p>
+<p>
+You can continue to rent colocation+bandwidth from us -- but whenever you
+decide, we can unplug the drive and ship it to you, (within the United States).
+Due to current export restrictions, we cannot ship to international users :/
+</p>
+<p>
+... but if you have U.S. mail forwarding address, we can work with that...
+</p>
+
+<h2>setup time:</h2>
+<p>
+After a successful first payment, your KVM instance will be created and your
+credentials will be emailed to you within 24 hours. The physical drive
+will be attached soon after. (Although, since we are currently in beta,
+it is not likely this will occur within 24 hours. But we predict that
+we will be fully operation by the first week of December.)
+</p>
+
+<h2>terms of service + SLA:</h2>
+<p>
+See <a href="/terms-of-service.txt">terms-of-service.txt</a>
+</p>
+</body>
+
+<footer>
+    <hr>
+    <span style="float: right">zfs.rent</span>
+    <span>&copy;
+      <a target="_top" href="https://radious.co/philosophy.txt">
+        Radious Subsystems
+      </a>
+    </span>
+</footer>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-183685667-1">
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-183685667-1');
+</script>
